@@ -17,13 +17,17 @@ class RoleManage(commands.Cog):
 								 0xffdd00, 0xff4000, 0xffffff, 0x7756d2]
         self.__private_colors_nb = len(self.__private_colors)
 
+    # embed.add_field(name=f'**Commands**', value=f'**Create Role Manager:**\n\n`>add-manager`\n\n------------\n\n'
+    #                             f'**Remove old request group:**\n\n`>remove-manager`\n\n------------\n\n'
+    #                             f'**Print man help:**\n\n`>help`\n\n', inline='false')
     async def __create_view_embed__(self):
         i = 0
-        embed = discord.Embed(title=f'**Event Role: **', description=f"**Notification roles for event **", \
+        message = list()
+        embed = discord.Embed(title=f'**Manager Roles: **', description=f"", \
 								color=self.__private_colors[randrange(self.__private_colors_nb)])
-
         for i in range(len(self.role_list)):
-            embed.add_field(name=f'{self.emoji_list[i]} : {self.role_list[i].name}', value='\u200b', inline=False)
+            message.append(f'{self.emoji_list[i]} : {self.role_list[i].name}\n')
+        embed.add_field(name=f'**Notification roles for event **', value=''.join(message), inline=False)
         embed.set_footer(text="Choose your role to get the notifications that concern you")
         return embed
 
@@ -72,7 +76,7 @@ class RoleManage(commands.Cog):
         return
 
     @commands.command(name="help")
-    async def cmd(self, ctx):
+    async def help_manager(self, ctx):
         embed = discord.Embed(title="Help", description="",color=0x7289da)
         # embed.set_author(name=f"{ctx.guild.me.display_name}", icon_url=f"{ctx.guild.me.avatar_url}")
         embed.add_field(name=f'**Commands**', value=f'**Create Role Manager:**\n\n`>add-manager`\n\n------------\n\n'
