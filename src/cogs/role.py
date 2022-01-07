@@ -136,10 +136,10 @@ class RoleManage(commands.Cog):
         def check(m):
             return m.author == ctx.author and isinstance(m.channel, discord.channel.DMChannel)
 
-        await ctx.author.send(f'** You have 60 second to answer each Questions! **\n'
-                                '** Check if you have start command on channel where you print Embed **\n'
-                                f"** send 'exit' if you have finish **\n"
-                                '** Enter name of Role: (e.g  `God`) **')
+        await ctx.author.send(f'**You have 60 second to answer each Questions! **\n'
+                                '**Check if you have start command on channel where you print Embed **\n'
+                                f"*Send `exit` if you have finish*\n"
+                                '**\nEnter name of Role: (e.g  `God`) **')
 
         while 1 and not finish:
             try:
@@ -149,29 +149,29 @@ class RoleManage(commands.Cog):
                     finish = True
                     continue
                 r = await ctx.guild.create_role(name=r, mentionable=True, colour=0xf1c40f)
-                await ctx.author.send(f"** Role `{r.name}` created **\n" \
-                                        f"** Send 'exit' for stop **\n")
+                await ctx.author.send(f"**Role `{r.name}` created**\n" \
+                                        f"*Send `exit` for stop*\n")
                 self.role_list.append(r)
             except asyncio.TimeoutError:
-                self.__send_advert_exit__(ctx, 'Took too long to answer!')
+                await self.__send_advert_exit__(ctx, '*Took too long to answer!*')
                 return
             except discord.Forbidden as message:
-                self.__send_advert_exit__(ctx, message)
+                await self.__send_advert_exit__(ctx, message)
                 return
 
-        await ctx.author.send(f"** Phase 2: Choose emojii **\n" \
-                                    f"** Send 'exit' for stop **\n")
+        await ctx.author.send(f"**Phase 2: Choose emojii **\n" \
+                                    f"*Send `exit` for stop*\n")
 
         for r in self.role_list:
-            await ctx.author.send(f'** Send Emoji used for choose role {r.name}: (e.g  `❌`) **')
+            await ctx.author.send(f'**Send Emoji used for choose role {r.name}: (e.g  `❌`) **')
             try:
                 r = await self.bot.wait_for('message',check=check, timeout=60.0)
-                if r == 'Exit':
-                    self.__send_advert_exit__(ctx, 'You send exit, Bye!')
+                if r.content.capitalize() == 'Exit':
+                    await self.__send_advert_exit__(ctx, '*You send exit, Bye!*')
                     return
                 self.emoji_list.append(r.content)
             except asyncio.TimeoutError:
-                self.__send_advert_exit__(ctx, 'Took too long to answer!')
+                await self.__send_advert_exit__(ctx, '*Took too long to answer!*')
                 return
 
         [self.db.set_role_table(guildID, r.id, r.name) for r in self.role_list]
