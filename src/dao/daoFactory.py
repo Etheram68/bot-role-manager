@@ -34,7 +34,7 @@ class DaoFactory:
         self.cur.execute("INSERT INTO role VALUES(?, ?, ?)", \
 					(guildID, roleID, name))
         self.con.commit()
-        return True
+        return
 
     def get_emoji_table(self, guildID:str):
         self.cur.execute("SELECT * FROM emoji WHERE guildID=?", (guildID,))
@@ -44,7 +44,7 @@ class DaoFactory:
     def set_emoji_table(self, guildID:str, name:str):
         self.cur.execute("INSERT INTO emoji VALUES(?, ?)", (guildID, name))
         self.con.commit()
-        return True
+        return
 
     def remove_all_elem(self, guildID:str):
         self.cur.execute("DELETE FROM role WHERE guildID=?", (guildID,))
@@ -53,6 +53,7 @@ class DaoFactory:
         self.con.commit()
         self.cur.execute("DELETE FROM guild WHERE guildID=?", (guildID,))
         self.con.commit()
+        return
 
     def check_guild_table(self, guildID:str):
         self.cur.execute("SELECT * FROM guild WHERE guildID=?", (guildID,))

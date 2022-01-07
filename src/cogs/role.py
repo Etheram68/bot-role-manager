@@ -47,6 +47,7 @@ class RoleManage(commands.Cog):
                 for i,e in enumerate(self.emoji_list):
                     if str(payload.emoji) == e:
                         await user.add_roles(self.role_list[i])
+        return
 
     @commands.Cog.listener()
     async def on_raw_reaction_remove(self, payload):
@@ -68,7 +69,18 @@ class RoleManage(commands.Cog):
                 for i,e in enumerate(self.emoji_list):
                     if str(payload.emoji) == e:
                         await user.remove_roles(self.role_list[i])
+        return
 
+    @commands.command(name="help")
+    async def cmd(self, ctx):
+        embed = discord.Embed(title="Help", description="",color=0x7289da)
+        # embed.set_author(name=f"{ctx.guild.me.display_name}", icon_url=f"{ctx.guild.me.avatar_url}")
+        embed.add_field(name=f'**Commands**', value=f'**Create Role Manager:**\n\n`>add-manager`\n\n------------\n\n'
+                                f'**Remove old request group:**\n\n`>remove-manager`\n\n------------\n\n'
+                                f'**Print man help:**\n\n`>help`\n\n', inline='false')
+        await ctx.channel.send(embed=embed)
+        await ctx.message.delete()
+        return
 
     @commands.command(name="remove-manager")
     @commands.has_permissions(administrator=True)
@@ -91,8 +103,9 @@ class RoleManage(commands.Cog):
         self.db.remove_all_elem(guildID)
 
         await msg.delete()
-        await ctx.author.send("** Request successfully deleted **")
+        await ctx.author.send("** Role Manager and roles successfully deleted **")
         await ctx.message.delete()
+        return
 
     @commands.command(name="add-manager")
     @commands.has_permissions(administrator=True)
@@ -109,7 +122,8 @@ class RoleManage(commands.Cog):
         except ValueExistError:
             await ctx.author.send('**Error: You can only have one role manager**\n' \
                                     '**Please use command `>remove-manager` for remove role manager**')
-            return False
+            await ctx.message.delete()
+            return
 
         def check(m):
             return m.author == ctx.author and isinstance(m.channel, discord.channel.DMChannel)
@@ -161,8 +175,9 @@ class RoleManage(commands.Cog):
         for emoji in self.emoji_list:
             await mess.add_reaction(emoji)
         self.db.set_guild_table(guildID, ownerID, mess.id, channelID)
-        await ctx.author.send(f'** Creating embed for choose role on channel {ctx.message.channel.name} **')
+        await ctx.author.send(f'** Embed for choose role on channel {ctx.message.channel.name} successfully Creating **')
         await ctx.message.delete()
+        return
 
 
 def setup(bot):
