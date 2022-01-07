@@ -139,7 +139,7 @@ class RoleManage(commands.Cog):
         await ctx.author.send(f'**You have 60 second to answer each Questions! **\n'
                                 '**Check if you have start command on channel where you print Embed **\n'
                                 f"*Send `exit` if you have finish*\n"
-                                '**\nEnter name of Role: (e.g  `God`) **')
+                                '**\nPhase 1: Enter name of Role: (e.g  `God`) **')
 
         while 1 and not finish:
             try:
