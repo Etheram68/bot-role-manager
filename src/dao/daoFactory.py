@@ -1,6 +1,5 @@
 import sqlite3
 
-
 class ValueExistError(Exception):
     pass
 

@@ -30,9 +30,9 @@ class RoleManage(commands.Cog):
         embed = discord.Embed(title=f'**Manager Roles: **', description=f"", \
 								color=self.__private_colors[randrange(self.__private_colors_nb)])
         for i in range(len(self.role_list)):
-            message.append(f'{self.emoji_list[i]} : {self.role_list[i].name}\n')
-        embed.add_field(name=f'**Notification roles for event **', value=''.join(message), inline=False)
-        embed.set_footer(text="Choose your role to get the notifications that concern you")
+            message.append(f'**{self.emoji_list[i]} : {self.role_list[i].name}**\n')
+        embed.add_field(name=f'***Notification roles for event ***', value=''.join(message), inline=False)
+        embed.set_footer(text="*Choose your role to get the notifications that concern you*")
         return embed
 
     @commands.Cog.listener()
@@ -81,7 +81,7 @@ class RoleManage(commands.Cog):
 
     @commands.command(name="help")
     async def help_manager(self, ctx):
-        embed = discord.Embed(title="Help", description="",color=0x7289da)
+        embed = discord.Embed(title="Help", description="", color=0x7289da)
         # embed.set_author(name=f"{ctx.guild.me.display_name}", icon_url=f"{ctx.guild.me.avatar_url}")
         embed.add_field(name=f'**Commands**', value=f'**Create Role Manager:**\n\n`>add-manager`\n\n------------\n\n'
                                 f'**Remove old request group:**\n\n`>remove-manager`\n\n------------\n\n'
@@ -111,7 +111,7 @@ class RoleManage(commands.Cog):
         self.db.remove_all_elem(guildID)
 
         await msg.delete()
-        await ctx.author.send("** Role Manager and roles successfully deleted **")
+        await ctx.author.send("***Role Manager and roles successfully deleted***")
         await ctx.message.delete()
         return
 
@@ -128,8 +128,8 @@ class RoleManage(commands.Cog):
         try:
             self.db.check_guild_table(guildID)
         except ValueExistError:
-            await ctx.author.send('**Error: You can only have one role manager**\n' \
-                                    '**Please use command `>remove-manager` for remove role manager**')
+            await ctx.author.send('***Error: You can only have one role manager***\n' \
+                                    '*Please use command `>remove-manager` for remove role manager*')
             await ctx.message.delete()
             return
 
@@ -163,7 +163,7 @@ class RoleManage(commands.Cog):
                                     f"*Send `exit` for stop*\n")
 
         for r in self.role_list:
-            await ctx.author.send(f'**Send Emoji used for choose role {r.name}: (e.g  `❌`) **')
+            await ctx.author.send(f'**Send Emoji used for choose role `{r.name}`: (e.g  `❌`) **')
             try:
                 r = await self.bot.wait_for('message',check=check, timeout=60.0)
                 if r.content.capitalize() == 'Exit':
@@ -173,7 +173,7 @@ class RoleManage(commands.Cog):
             except asyncio.TimeoutError:
                 await self.__send_advert_exit__(ctx, '*Took too long to answer!*')
                 return
-
+        await ctx.author.send(f'*Please wait i create your embed ...*')
         [self.db.set_role_table(guildID, r.id, r.name) for r in self.role_list]
         [self.db.set_emoji_table(guildID, e) for e in self.emoji_list]
         embed = await self.__create_view_embed__()
@@ -181,7 +181,7 @@ class RoleManage(commands.Cog):
         for emoji in self.emoji_list:
             await mess.add_reaction(emoji)
         self.db.set_guild_table(guildID, ownerID, mess.id, channelID)
-        await ctx.author.send(f'** Embed for choose role on channel {ctx.message.channel.name} successfully Creating **')
+        await ctx.author.send(f'***Embed for choose role on channel {ctx.message.channel.name} successfully Creating***')
         await ctx.message.delete()
         return
 
