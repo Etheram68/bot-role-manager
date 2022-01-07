@@ -108,7 +108,8 @@ class RoleManage(commands.Cog):
             self.db.check_guild_table(guildID)
         except ValueExistError:
             await ctx.author.send('**Error: You can only have one role manager**\n' \
-                                    '**Please use command `>remove-manager` for create new role manager**')
+                                    '**Please use command `>remove-manager` for remove role manager**')
+            return False
 
         def check(m):
             return m.author == ctx.author and isinstance(m.channel, discord.channel.DMChannel)
@@ -131,9 +132,11 @@ class RoleManage(commands.Cog):
             except asyncio.TimeoutError:
                 await ctx.author.send('Took too long to answer!')
                 await ctx.message.delete()
+                return False
             except discord.Forbidden as message:
                 await ctx.author.send(message)
                 await ctx.message.delete()
+                return False
 
         await ctx.author.send(f"** Phase 2: Choose emojii **\n" \
                                     f"** Send 'exit' for stop **\n")
