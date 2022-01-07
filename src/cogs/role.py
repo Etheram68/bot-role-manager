@@ -17,9 +17,13 @@ class RoleManage(commands.Cog):
 								 0xffdd00, 0xff4000, 0xffffff, 0x7756d2]
         self.__private_colors_nb = len(self.__private_colors)
 
-    # embed.add_field(name=f'**Commands**', value=f'**Create Role Manager:**\n\n`>add-manager`\n\n------------\n\n'
-    #                             f'**Remove old request group:**\n\n`>remove-manager`\n\n------------\n\n'
-    #                             f'**Print man help:**\n\n`>help`\n\n', inline='false')
+    async def __send_advert_exit__(self, ctx, message):
+        await ctx.author.send(message)
+        await ctx.message.delete()
+        if len(self.role_list) > 0:
+            [await r.delete() for r in self.role_list]
+        return
+
     async def __create_view_embed__(self):
         i = 0
         message = list()
@@ -145,16 +149,15 @@ class RoleManage(commands.Cog):
                     finish = True
                     continue
                 r = await ctx.guild.create_role(name=r, mentionable=True, colour=0xf1c40f)
-                await ctx.author.send(f"** Role `{r.name}` created **\n")
+                await ctx.author.send(f"** Role `{r.name}` created **\n" \
+                                        f"** Send 'exit' for stop **\n")
                 self.role_list.append(r)
             except asyncio.TimeoutError:
-                await ctx.author.send('Took too long to answer!')
-                await ctx.message.delete()
-                return False
+                self.__send_advert_exit__(ctx, 'Took too long to answer!')
+                return
             except discord.Forbidden as message:
-                await ctx.author.send(message)
-                await ctx.message.delete()
-                return False
+                self.__send_advert_exit__(ctx, message)
+                return
 
         await ctx.author.send(f"** Phase 2: Choose emojii **\n" \
                                     f"** Send 'exit' for stop **\n")
@@ -164,14 +167,13 @@ class RoleManage(commands.Cog):
             try:
                 r = await self.bot.wait_for('message',check=check, timeout=60.0)
                 if r == 'Exit':
-                    await ctx.message.delete()
-                    await ctx.author.send(f'** You send exit, Bye **')
+                    self.__send_advert_exit__(ctx, 'You send exit, Bye!')
                     return
                 self.emoji_list.append(r.content)
-
             except asyncio.TimeoutError:
-                await ctx.author.send('Took too long to answer!')
-                await ctx.message.delete()
+                self.__send_advert_exit__(ctx, 'Took too long to answer!')
+                return
+
         [self.db.set_role_table(guildID, r.id, r.name) for r in self.role_list]
         [self.db.set_emoji_table(guildID, e) for e in self.emoji_list]
         embed = await self.__create_view_embed__()
