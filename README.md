@@ -44,5 +44,5 @@ This command removes the Embed message, and removes the roles you created.
 
 
 ### Issues
-If you have an error you can report here your problem
-[Report your problem here](https://github.com/Etheram68/bot-role-manager/issues)
+If you have an error you can
+[report your problem here](https://github.com/Etheram68/bot-role-manager/issues)
