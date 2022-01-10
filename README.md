@@ -1,4 +1,4 @@
-# bot-role-manager
+# Discord Bot Manager
 
 ## Description
 This is a bot for create and attribute role when user add reaction on emojii.
