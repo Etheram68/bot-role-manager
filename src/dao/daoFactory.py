@@ -12,10 +12,10 @@ class DaoFactory:
                                 WHERE type='table' AND name='role' ''')
         rows = self.cur.fetchall()
         if not rows[0][0]:
-            self.__init_tables_expeditions()
+            self.__init_tables__()
 
 
-    def __init_tables_expeditions(self):
+    def __init_tables__(self):
         self.cur.execute('''CREATE TABLE IF NOT EXISTS role
                 (guildID str, roleID str, name str)''')
         self.cur.execute('''CREATE TABLE IF NOT EXISTS emoji
