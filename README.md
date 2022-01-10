@@ -41,3 +41,8 @@ and asks you to choose the emoji to assign to the role assignment
 
 >`>remove-manager`
 This command removes the Embed message, and removes the roles you created.
+
+
+### Issues
+If you have an error you can report here your problem
+[Report your problem here](https://github.com/Etheram68/bot-role-manager/issues)
