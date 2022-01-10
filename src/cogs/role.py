@@ -1,6 +1,7 @@
 import discord
 import asyncio
 from discord.ext import commands
+from discord.ext.commands import MissingPermissions
 from discord.utils import get
 from random import randrange
 from src.dao.daoFactory import DaoFactory, ValueExistError
@@ -91,7 +92,7 @@ class RoleManage(commands.Cog):
         return
 
     @commands.command(name="remove-manager")
-    @commands.has_permissions(administrator=True)
+    @commands.has_permissions(manage_roles=True)
     async def remove_manage_role(self, ctx):
         self.role_list = list()
         guild = ctx.guild
@@ -115,8 +116,15 @@ class RoleManage(commands.Cog):
         await ctx.message.delete()
         return
 
+    @remove_manage_role.error
+    async def remove_manage_role_error(self, error, ctx):
+        if isinstance(error, MissingPermissions):
+            await ctx.author.send(f'***Error: You are missing Administrator permission(s) to run this command***')
+            await ctx.message.delete()
+
+
     @commands.command(name="add-manager")
-    @commands.has_permissions(administrator=True)
+    @commands.has_permissions(manage_roles=True)
     async def create_manage_role(self, ctx):
         guildID = ctx.guild.id
         ownerID = ctx.author.id
@@ -185,6 +193,11 @@ class RoleManage(commands.Cog):
         await ctx.message.delete()
         return
 
+    @create_manage_role.error
+    async def create_manage_role_error(self, ctx, error):
+        if isinstance(error, MissingPermissions):
+            await ctx.author.send(f'***Error: You are missing manage_roles permission(s) to run this command***')
+            await ctx.message.delete()
 
 def setup(bot):
     db = DaoFactory()
