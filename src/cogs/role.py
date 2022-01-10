@@ -101,17 +101,18 @@ class RoleManage(commands.Cog):
         channel_id = self.db.get_id_channel(guildID)
         id_mess = self.db.get_id_mess(guildID)
         chanel = self.bot.get_channel(int(channel_id[0]))
-        msg = await chanel.fetch_message(id_mess[0])
+        msg = await chanel.fetch_message(id_mess[0]) if chanel else None
 
         lst_roles_db = self.db.get_role_table(guildID)
         for e in lst_roles_db:
-            self.role_list.append(get(guild.roles, id=e[1]))
+            role = get(guild.roles, id=e[1])
+            self.role_list.append(role) if role else None
 
-        [await r.delete() for r in self.role_list]
+        [await r.delete() for r in self.role_list] if len(self.role_list) > 0 else None
 
         self.db.remove_all_elem(guildID)
 
-        await msg.delete()
+        await msg.delete() if msg else None
         await ctx.author.send("***Role Manager and roles successfully deleted***")
         await ctx.message.delete()
         return
