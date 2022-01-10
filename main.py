@@ -4,8 +4,9 @@ import sys, traceback, os
 from discord.ext import commands
 
 intents = discord.Intents().all()
+activity = discord.Game(name="Assign Roles")
 
-bot = commands.Bot(command_prefix='>', intents=intents)
+bot = commands.Bot(command_prefix='>', intents=intents, activity=activity)
 bot.remove_command("help")
 
 initial_extension = ['src.cogs.role']
