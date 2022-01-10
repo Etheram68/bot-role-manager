@@ -83,7 +83,6 @@ class RoleManage(commands.Cog):
     @commands.command(name="help")
     async def help_manager(self, ctx):
         embed = discord.Embed(title="Help", description="", color=0x7289da)
-        # embed.set_author(name=f"{ctx.guild.me.display_name}", icon_url=f"{ctx.guild.me.avatar_url}")
         embed.add_field(name=f'**Commands**', value=f'**Create Role Manager:**\n\n`>add-manager`\n\n------------\n\n'
                                 f'**Remove old request group:**\n\n`>remove-manager`\n\n------------\n\n'
                                 f'**Print man help:**\n\n`>help`\n\n', inline='false')
