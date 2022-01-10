@@ -146,20 +146,35 @@ class RoleManage(commands.Cog):
             return m.author == ctx.author and isinstance(m.channel, discord.channel.DMChannel)
 
         await ctx.author.send(f'**You have 60 second to answer each Questions! **\n'
-                                '**Check if you have start command on channel where you print Embed **\n'
-                                f"*Send `exit` if you have finish*\n"
-                                '**\nPhase 1: Enter name of Role: (e.g  `God`) **')
+                                '**Check if you have start command on channel where you want print Embed **\n'
+                                f"*Send `exit` for stop*\n"
+                                '**\nPhase 1: how many roles created ? **')
 
-        while 1 and not finish:
+        await ctx.author.send(f'\n**Enter number of roles you want to create**')
+        try:
+            r = await self.bot.wait_for('message',check=check, timeout=60.0)
+            if r.content.capitalize() == 'Exit':
+                await self.__send_advert_exit__(ctx, '*You send exit, Bye!*')
+                return
+            nb_roles = int(r.content)
+        except asyncio.TimeoutError:
+            await self.__send_advert_exit__(ctx, '*Took too long to answer!*')
+            return
+        except ValueError:
+            await ctx.author.send('*Error: you have not enter a Number!*\n**Please Restart**')
+            await ctx.message.delete()
+            return
+
+        await ctx.author.send('**\nPhase 2: Enter name of Role: (e.g  `God`) **')
+        for i in range(0, nb_roles):
             try:
                 r = await self.bot.wait_for('message',check=check, timeout=60.0)
                 r = r.content.capitalize()
                 if r == 'Exit':
-                    finish = True
-                    continue
+                    await self.__send_advert_exit__(ctx, '*You send exit, Bye!*')
+                    return
                 r = await ctx.guild.create_role(name=r, mentionable=True, colour=0xf1c40f)
-                await ctx.author.send(f"**Role `{r.name}` created**\n" \
-                                        f"*Send `exit` for stop*\n")
+                await ctx.author.send(f"**Role number {i+1}: `{r.name}` created**\n")
                 self.role_list.append(r)
             except asyncio.TimeoutError:
                 await self.__send_advert_exit__(ctx, '*Took too long to answer!*')
@@ -168,7 +183,7 @@ class RoleManage(commands.Cog):
                 await self.__send_advert_exit__(ctx, message)
                 return
 
-        await ctx.author.send(f"**Phase 2: Choose emojii **\n" \
+        await ctx.author.send(f"\n**Phase 3: Choose emojii **\n" \
                                     f"*Send `exit` for stop*\n")
 
         for r in self.role_list:
