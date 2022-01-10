@@ -6,7 +6,9 @@ This bot manage role and Embed for add roles.
 
 ## Docs
 ### General
-> The language of the bot is Python, is code with `python 3.9`
+> The language of this bot is `Python 3.9`
+
+*Don't forget to use commands: `pip install -r requirement.txt` to install the necessary dependencies*
 
 ### Permissions
 This bot needs the following permission to work
@@ -34,6 +36,8 @@ To get started, just run `>help` command on your server for see list of commands
 This command asks you how many role you want to create,
 asks you for the names to give to the role,
 and asks you to choose the emoji to assign to the role assignment
+
+*You can create only one Embed for manage role user per guild*
 
 >`>remove-manager`
 This command removes the Embed message, and removes the roles you created.
